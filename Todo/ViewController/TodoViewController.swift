@@ -21,10 +21,6 @@ class TodoViewController: UIViewController {
         setDate()
     }
     
-    @IBAction func touchUpEditButton(_ sender: Any) {
-        
-    }
-    
     @IBAction func touchUpAddButton(_ sender: Any) {
         let alert = UIAlertController(title: "할 일 추가하기", message: nil, preferredStyle: .alert)
         let cancelButton = UIAlertAction(title: "취소", style: .cancel)
@@ -64,6 +60,34 @@ class TodoViewController: UIViewController {
         Todo.todoData.sort { !$0.isDone && $1.isDone }
     }
     
+    func edit(_ todo: String, _ indexPath: IndexPath, _ cell: TodoTableViewCell) {
+        guard let editViewController = storyboard?.instantiateViewController(withIdentifier: "EditViewController") as? EditViewController else { return }
+        editViewController.modalPresentationStyle = .pageSheet
+
+        if let sheetPresentationController = editViewController.presentationController as? UISheetPresentationController {
+            sheetPresentationController.detents = [.custom { _ in
+                return 250
+            }]
+            sheetPresentationController.prefersGrabberVisible = true
+            sheetPresentationController.largestUndimmedDetentIdentifier = .medium
+        }
+
+        present(editViewController, animated: true)
+        
+        editViewController.setTitle(todo: todo)
+        editViewController.touchedDeleteButton = {
+            Todo.todoData.remove(at: indexPath.row)
+            self.todoTableView.deleteRows(at: [indexPath], with: .fade)
+            editViewController.dismiss(animated: true) {
+                self.todoTableView.reloadData()
+            }
+        }
+        editViewController.touchedEditButton = {
+            editViewController.dismiss(animated: true)
+            cell.editTextField()
+        }
+    }
+    
 
 }
 
@@ -77,10 +101,20 @@ extension TodoViewController: UITableViewDataSource {
         else { return UITableViewCell() }
         
         cell.setData(todo: Todo.todoData[indexPath.row])
+        
         cell.touchedCheckButton = {
             Todo.todoData[indexPath.row].isDone.toggle()
             cell.setButtonImage(isChecked: Todo.todoData[indexPath.row].isDone)
             Todo.todoData.sort { !$0.isDone && $1.isDone }
+            self.todoTableView.reloadData()
+        }
+        
+        cell.touchedEditButton = { todo in
+            self.edit(todo, indexPath, cell)
+        }
+        
+        cell.didEndEditing = { todo in
+            Todo.todoData[indexPath.row].content = todo
             self.todoTableView.reloadData()
         }
         
@@ -91,5 +125,12 @@ extension TodoViewController: UITableViewDataSource {
 extension TodoViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 55
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            Todo.todoData.remove(at: indexPath.row)
+            todoTableView.deleteRows(at: [indexPath], with: .fade)
+        }
     }
 }

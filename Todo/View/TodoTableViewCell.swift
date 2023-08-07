@@ -11,13 +11,15 @@ class TodoTableViewCell: UITableViewCell {
     
     static let identifier = "TodoTableViewCell"
     var touchedCheckButton: (() -> ())?
+    var touchedEditButton: ((_ todo: String) -> ())?
+    var didEndEditing: ((_ todo: String) -> ())?
 
     @IBOutlet weak var checkButton: UIButton!
-    @IBOutlet weak var todoLabel: UILabel!
+    @IBOutlet weak var todoTextField: UITextField!
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        checkButton.setImage(UIImage(named: "checkmark.seal"), for: .normal)
+        setTextField()
         contentView.layer.cornerRadius = 22
     }
     
@@ -34,13 +36,35 @@ class TodoTableViewCell: UITableViewCell {
         touchedCheckButton?()
     }
     
+    @IBAction func touchUpEditButton(_ sender: Any) {
+        touchedEditButton?(todoTextField.text ?? "")
+    }
+    
+    func setTextField() {
+        todoTextField.delegate = self
+        todoTextField.isEnabled = false
+    }
+    
     func setButtonImage(isChecked: Bool) {
         checkButton.setImage(isChecked ? UIImage(systemName: "checkmark.seal.fill") : UIImage(systemName: "checkmark.seal"), for: .normal)
     }
     
-    func setData(todo: Todo) {
-        checkButton.setImage(todo.isDone ? UIImage(systemName: "checkmark.seal.fill") : UIImage(systemName: "checkmark.seal"), for: .normal)
-        todoLabel.text = todo.content
+    func editTextField() {
+        todoTextField.isEnabled = true
+        todoTextField.becomeFirstResponder()
     }
     
+    func setData(todo: Todo) {
+        checkButton.setImage(todo.isDone ? UIImage(systemName: "checkmark.seal.fill") : UIImage(systemName: "checkmark.seal"), for: .normal)
+        todoTextField.text = todo.content
+    }
+    
+}
+
+extension TodoTableViewCell: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        didEndEditing?(todoTextField.text ?? "")
+        todoTextField.resignFirstResponder()
+        return true
+    }
 }
