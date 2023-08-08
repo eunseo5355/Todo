@@ -91,6 +91,8 @@ class TodoViewController: UIViewController {
 
 }
 
+//MARK: - UITableViewDataSource
+
 extension TodoViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return Todo.todoData.count
@@ -109,18 +111,25 @@ extension TodoViewController: UITableViewDataSource {
             self.todoTableView.reloadData()
         }
         
-        cell.touchedEditButton = { todo in
+        cell.touchedMoreButton = { todo in
             self.edit(todo, indexPath, cell)
         }
         
         cell.didEndEditing = { todo in
-            Todo.todoData[indexPath.row].content = todo
+            if todo.isEmpty {
+                Todo.todoData.remove(at: indexPath.row)
+                self.todoTableView.deleteRows(at: [indexPath], with: .fade)
+            } else {
+                Todo.todoData[indexPath.row].content = todo
+            }
             self.todoTableView.reloadData()
         }
         
         return cell
     }
 }
+
+//MARK: - UITableViewDelegate
 
 extension TodoViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

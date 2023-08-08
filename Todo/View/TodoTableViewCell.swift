@@ -11,7 +11,7 @@ class TodoTableViewCell: UITableViewCell {
     
     static let identifier = "TodoTableViewCell"
     var touchedCheckButton: (() -> ())?
-    var touchedEditButton: ((_ todo: String) -> ())?
+    var touchedMoreButton: ((_ todo: String) -> ())?
     var didEndEditing: ((_ todo: String) -> ())?
 
     @IBOutlet weak var checkButton: UIButton!
@@ -36,8 +36,8 @@ class TodoTableViewCell: UITableViewCell {
         touchedCheckButton?()
     }
     
-    @IBAction func touchUpEditButton(_ sender: Any) {
-        touchedEditButton?(todoTextField.text ?? "")
+    @IBAction func touchUpMoreButton(_ sender: Any) {
+        touchedMoreButton?(todoTextField.text ?? "")
     }
     
     func setTextField() {
@@ -60,6 +60,8 @@ class TodoTableViewCell: UITableViewCell {
     }
     
 }
+
+//MARK: - UITextFieldDelegate
 
 extension TodoTableViewCell: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

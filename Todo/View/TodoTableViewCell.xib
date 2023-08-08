@@ -37,7 +37,7 @@
                         <state key="normal" image="ellipsis" catalog="system"/>
                         <buttonConfiguration key="configuration" style="plain" image="ellipsis" catalog="system"/>
                         <connections>
-                            <action selector="touchUpEditButton:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="nIA-J9-JQ8"/>
+                            <action selector="touchUpMoreButton:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="nIA-J9-JQ8"/>
                         </connections>
                     </button>
                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="할 일" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="DSu-9y-klj">
