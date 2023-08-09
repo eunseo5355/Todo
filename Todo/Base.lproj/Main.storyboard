@@ -18,11 +18,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="L29-8N-zV9">
-                                <rect key="frame" x="117.66666666666669" y="366" width="158" height="120"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="hYs-qh-fNQ">
+                                <rect key="frame" x="30" y="142" width="333" height="568"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x38-J7-Lct">
-                                        <rect key="frame" x="0.0" y="0.0" width="158" height="57.333333333333336"/>
+                                        <rect key="frame" x="87.666666666666686" y="0.0" width="158" height="57.333333333333336"/>
                                         <attributedString key="attributedText">
                                             <fragment content="Todo">
                                                 <attributes>
@@ -38,38 +38,45 @@
                                         </attributedString>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" style="inline" translatesAutoresizingMaskIntoConstraints="NO" id="BOw-1r-zbN">
+                                        <rect key="frame" x="0.0" y="87.333333333333371" width="333" height="399"/>
+                                        <color key="tintColor" red="0.6313356161" green="0.80000716449999998" blue="0.81960278750000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <connections>
+                                            <action selector="dateChanged:" destination="eNL-x4-gOw" eventType="valueChanged" id="RJI-BA-O1z"/>
+                                        </connections>
+                                    </datePicker>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ogD-SW-JCW">
-                                        <rect key="frame" x="24.999999999999986" y="77.333333333333314" width="108.00000000000001" height="42.666666666666657"/>
+                                        <rect key="frame" x="101" y="516.33333333333337" width="131" height="51.666666666666629"/>
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" title="Start👉"/>
                                         <buttonConfiguration key="configuration" style="plain">
-                                            <backgroundConfiguration key="background" cornerRadius="15">
+                                            <backgroundConfiguration key="background" cornerRadius="20">
                                                 <color key="backgroundColor" red="0.63137254899999995" green="0.80000000000000004" blue="0.81960784310000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </backgroundConfiguration>
                                             <attributedString key="attributedTitle">
                                                 <fragment content="Start">
                                                     <attributes>
                                                         <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                                        <font key="NSFont" size="24" name="D2CodingBold"/>
-                                                        <font key="NSOriginalFont" size="24" name="D2CodingBold"/>
+                                                        <font key="NSFont" size="30" name="AppleMyungjo"/>
+                                                        <font key="NSOriginalFont" metaFont="system" size="30"/>
                                                     </attributes>
                                                 </fragment>
                                                 <fragment content=" ">
                                                     <attributes>
                                                         <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                                        <font key="NSFont" metaFont="system" size="24"/>
+                                                        <font key="NSFont" size="30" name="AppleMyungjo"/>
                                                     </attributes>
                                                 </fragment>
                                                 <fragment content="👉">
                                                     <attributes>
                                                         <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                                        <font key="NSFont" metaFont="system" size="24"/>
-                                                        <font key="NSOriginalFont" size="18" name="D2Coding"/>
+                                                        <font key="NSFont" metaFont="system" size="30"/>
+                                                        <font key="NSOriginalFont" size="30" name="AppleMyungjo"/>
                                                     </attributes>
                                                 </fragment>
                                             </attributedString>
-                                            <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </buttonConfiguration>
                                         <connections>
                                             <action selector="touchUpStartButton:" destination="eNL-x4-gOw" eventType="touchUpInside" id="osF-LH-mHN"/>
@@ -81,11 +88,14 @@
                         <viewLayoutGuide key="safeArea" id="Yik-Qd-sdc"/>
                         <color key="backgroundColor" red="0.95686274510000002" green="0.94901960780000005" blue="0.87058823529999996" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="L29-8N-zV9" firstAttribute="centerX" secondItem="0OZ-F5-zjG" secondAttribute="centerX" id="8IX-bh-PcX"/>
-                            <constraint firstItem="L29-8N-zV9" firstAttribute="centerY" secondItem="0OZ-F5-zjG" secondAttribute="centerY" id="bEf-Fz-2zW"/>
+                            <constraint firstItem="hYs-qh-fNQ" firstAttribute="centerX" secondItem="0OZ-F5-zjG" secondAttribute="centerX" id="Eea-2n-Mw8"/>
+                            <constraint firstItem="hYs-qh-fNQ" firstAttribute="centerY" secondItem="0OZ-F5-zjG" secondAttribute="centerY" id="OWo-UJ-E9G"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="x9O-dU-56v"/>
+                    <connections>
+                        <outlet property="datePicker" destination="BOw-1r-zbN" id="79e-en-aP2"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4iY-RR-Eoa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -150,7 +160,7 @@
                                     <constraint firstAttribute="height" constant="60" id="j23-u5-ns0"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <color key="tintColor" red="0.48627450979999998" green="0.61568627450000002" blue="0.58823529409999997" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="tintColor" red="0.6313356161" green="0.80000716449999998" blue="0.81960278750000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal">
                                     <imageReference key="image" image="plus.circle.fill" catalog="system" symbolScale="default" variableValue="0.0"/>

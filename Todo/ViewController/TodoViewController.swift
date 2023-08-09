@@ -13,12 +13,28 @@ class TodoViewController: UIViewController {
     @IBOutlet weak var monthLabel: UILabel!
     @IBOutlet weak var yearLabel: UILabel!
     @IBOutlet weak var todoTableView: UITableView!
+    
+    var todoDate: Date = Date() {
+        didSet {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            formattedDate = dateFormatter.string(from: todoDate)
+        }
+    }
+    var formattedDate: String = ""
+    var todoList: [Todo] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.isHidden = true
         setTableView()
         setDate()
+        loadTodoList()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        save()
     }
     
     @IBAction func touchUpAddButton(_ sender: Any) {
@@ -26,8 +42,8 @@ class TodoViewController: UIViewController {
         let cancelButton = UIAlertAction(title: "취소", style: .cancel)
         let addButton = UIAlertAction(title: "추가", style: .default) { _ in
             let todo = Todo(content: alert.textFields?[0].text ?? "", isDone: false)
-            Todo.todoData.append(todo)
-            Todo.todoData.sort { !$0.isDone && $1.isDone }
+            self.todoList.append(todo)
+            self.todoList.sort { !$0.isDone && $1.isDone }
             self.todoTableView.reloadData()
         }
         
@@ -39,8 +55,30 @@ class TodoViewController: UIViewController {
         present(alert, animated: true)
     }
     
+    func save() {
+        do {
+            let encoder = JSONEncoder()
+            let encodedData = try encoder.encode(todoList)
+            UserDefaults.standard.set(encodedData, forKey: formattedDate)
+        } catch {
+            print("Error encoding struct: \(error)")
+        }
+    }
+    
+    func loadTodoList() {
+        if let savedData = UserDefaults.standard.data(forKey: formattedDate) {
+            do {
+                let decoder = JSONDecoder()
+                let loadedTodo = try decoder.decode([Todo].self, from: savedData)
+                todoList = loadedTodo
+            } catch {
+                print("Error decoding struct: \(error)")
+            }
+        }
+    }
+    
     func setDate() {
-        let date = Date()
+        let date = todoDate
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "d"
         dayLabel.text = dateFormatter.string(from: date)
@@ -57,13 +95,13 @@ class TodoViewController: UIViewController {
         todoTableView.dataSource = self
         todoTableView.delegate = self
         
-        Todo.todoData.sort { !$0.isDone && $1.isDone }
+        todoList.sort { !$0.isDone && $1.isDone }
     }
     
     func edit(_ todo: String, _ indexPath: IndexPath, _ cell: TodoTableViewCell) {
         guard let editViewController = storyboard?.instantiateViewController(withIdentifier: "EditViewController") as? EditViewController else { return }
         editViewController.modalPresentationStyle = .pageSheet
-
+        
         if let sheetPresentationController = editViewController.presentationController as? UISheetPresentationController {
             sheetPresentationController.detents = [.custom { _ in
                 return 250
@@ -71,12 +109,12 @@ class TodoViewController: UIViewController {
             sheetPresentationController.prefersGrabberVisible = true
             sheetPresentationController.largestUndimmedDetentIdentifier = .medium
         }
-
+        
         present(editViewController, animated: true)
         
         editViewController.setTitle(todo: todo)
         editViewController.touchedDeleteButton = {
-            Todo.todoData.remove(at: indexPath.row)
+            self.todoList.remove(at: indexPath.row)
             self.todoTableView.deleteRows(at: [indexPath], with: .fade)
             editViewController.dismiss(animated: true) {
                 self.todoTableView.reloadData()
@@ -87,27 +125,25 @@ class TodoViewController: UIViewController {
             cell.editTextField()
         }
     }
-    
-
 }
 
 //MARK: - UITableViewDataSource
 
 extension TodoViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Todo.todoData.count
+        return todoList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = todoTableView.dequeueReusableCell(withIdentifier: TodoTableViewCell.identifier, for: indexPath) as? TodoTableViewCell
         else { return UITableViewCell() }
         
-        cell.setData(todo: Todo.todoData[indexPath.row])
+        cell.setData(todo: todoList[indexPath.row])
         
         cell.touchedCheckButton = {
-            Todo.todoData[indexPath.row].isDone.toggle()
-            cell.setButtonImage(isChecked: Todo.todoData[indexPath.row].isDone)
-            Todo.todoData.sort { !$0.isDone && $1.isDone }
+            self.todoList[indexPath.row].isDone.toggle()
+            cell.setButtonImage(isChecked: self.todoList[indexPath.row].isDone)
+            self.todoList.sort { !$0.isDone && $1.isDone }
             self.todoTableView.reloadData()
         }
         
@@ -117,10 +153,10 @@ extension TodoViewController: UITableViewDataSource {
         
         cell.didEndEditing = { todo in
             if todo.isEmpty {
-                Todo.todoData.remove(at: indexPath.row)
+                self.todoList.remove(at: indexPath.row)
                 self.todoTableView.deleteRows(at: [indexPath], with: .fade)
             } else {
-                Todo.todoData[indexPath.row].content = todo
+                self.todoList[indexPath.row].content = todo
             }
             self.todoTableView.reloadData()
         }
@@ -138,7 +174,7 @@ extension TodoViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            Todo.todoData.remove(at: indexPath.row)
+            todoList.remove(at: indexPath.row)
             todoTableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
